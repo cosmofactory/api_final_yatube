@@ -1,11 +1,13 @@
 from api.permissions import IsAuthorOrReadOnly
-from api.serializers import (CommentSerializer, FollowSerializer,
-                             GroupSerializer, PostSerializer)
+from api.serializers import (
+    CommentSerializer, FollowSerializer, GroupSerializer, PostSerializer
+)
 from django.shortcuts import get_object_or_404
-from posts.models import Follow, Group, Post
+from posts.models import Group, Post
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import (IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import (
+    IsAuthenticated, IsAuthenticatedOrReadOnly
+)
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 
@@ -52,7 +54,7 @@ class FollowViewSet(PostViewSet):
     search_fields = ('user__username', 'following__username')
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        return self.request.user.follower.all()
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
